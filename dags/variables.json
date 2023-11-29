@@ -1,0 +1,8 @@
+{
+    "URL_API": "https://www.alphavantage.co/query",
+    "apikey": "BMFMXVYQHWQEZAU1",
+    "conn_name": "conn_db",
+    "AAPL": "APPLE",
+    "NVDA": "NVIDIA",
+    "TSLA": "TESLA"
+}

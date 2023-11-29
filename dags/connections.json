@@ -1,0 +1,12 @@
+{
+  "conn_db": {
+    "conn_type": "postgres",
+    "description": "",
+    "login": "postgres",
+    "password": "password",
+    "host": "host.docker.internal",
+    "port": 5430,
+    "schema": "test",
+    "extra": ""
+  }
+}
