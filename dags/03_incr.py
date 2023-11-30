@@ -178,6 +178,7 @@ def upd_mart():
         mart_query= f"""
         DROP TABLE IF EXISTS mart;
         CREATE TABLE mart (
+        date timestamp,
         ticker text,
         company text,
         day_volume bigint,
@@ -211,7 +212,7 @@ def upd_mart():
 
             mart_load_query=f"""
             INSERT INTO mart 
-            select ticker, company, day_volume, day_open, day_close, diff_exchange, max_volume_interval, high_interval, low_interval
+            select date, ticker, company, day_volume, day_open, day_close, diff_exchange, max_volume_interval, high_interval, low_interval
             FROM {core_table_name}
             Order by date desc limit 1;
             """
