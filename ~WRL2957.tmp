@@ -94,7 +94,7 @@ ER-диаграмма
 
 Используемые технологии с обоснованием
 ===========
-• **PostgreSQL**
+• PostgreSQL
 
 Объем извлекаемымх данных не велик. 
 С учетом часов работы рынков с 04.00 до 20.00 и интервала извлечения 1min мы получаем порядка 960 записей в день по каждой акции.
@@ -104,73 +104,11 @@ ER-диаграмма
 
 Извлекаемые данные структурированы, для их хранения и обработки подходят реляционные базы данных, такие как PostgreSQL.
  
-• **Airflow**
-
+• Airflow
 Оркестратор, используемый для разработки, планирования и мониторинга рабочих процессов - имеет удобный веб-интерфейс для создания конвейеров данных, где можно наглядно отслеживать жизненный цикл данных в цепочках связанных задач.
 
 Запуск проекта
 ===========
-
-Для запуска проекта необходимо склонировать проект на свою машину.
-В терминале перейти в папку проекта и выполнить команду * docker-compose up -d*
-
-Далее необходимо перейти в Airflow  по адресу [http://localhost:8080]( http://localhost:8080/)
-
-Для загрузки Variables и Connections запускается DAG [01_conn_var]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/01_conn_var.py)
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_01_conn_var.png)
-
-Результат работы DAG 01_conn_var
-
-![Image alt](https://github.com/MOMIV/MProject/blob/main/doc/pic/List_connection.png)
-
-![Image alt](https://github.com/MOMIV/MProject/blob/main/doc/pic/List_variable.png)
-
-Список DAG
-
-![Image alt](https://github.com/MOMIV/MProject/blob/main/doc/pic/Dags.png)
-
-
-К БД подключаемся с помощью DBeaver, параметры подключения берем из [connections.json](https://github.com/MOMIV/MProject/blob/main/airflow/dags/connections.json)
-
-Далее запускается DAG [02_init](https://github.com/MOMIV/MProject/blob/main/airflow/dags/02_init.py) – инициализирующий
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_02_init.png)
-
-Результат работы DAG 02_init
-
-Данные по акциям Apple на row-слое
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_01_row.png)
-
-Данные по акциям Apple на core-слое
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_01_core.png)
-
-Витрина данных
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_01_mart.png)
-
-DAG 02_init запускается один раз, далее данные дополняются ежедневно в 01.00 при запуске DAG [03_incr]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/03_incr.py) – инкрементальный
-
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_03_incr.png)
-
-Результат работы DAG 03_incr
-
-Данные по акциям Apple на row-слое
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_row.png)
-
-Данные по акциям Apple на core-слое
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_core.png)
-
-Витрина данных
-
-![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_mart.png)
-
-
 
 
 
