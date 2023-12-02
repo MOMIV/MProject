@@ -103,6 +103,8 @@ ER-диаграмма
 <summary> :white_check_mark: </summary>
 
 ![Image alt](https://github.com/MOMIV/MProject/blob/main/doc/pic/ERD.png)
+</details>
+
 
 Используемые технологии с обоснованием
 ===========
