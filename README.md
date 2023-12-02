@@ -111,12 +111,12 @@ ER-диаграмма
 Запуск проекта
 ===========
 
-Для запуска проекта необходимо склонировать проект на свою машину.
-В терминале перейти в папку проекта и выполнить команду * docker-compose up -d*
+1. Для запуска проекта необходимо склонировать проект на свою машину.
+В терминале перейти в папку проекта и выполнить команду *docker-compose up -d*
 
-Далее необходимо перейти в Airflow  по адресу [http://localhost:8080]( http://localhost:8080/)
+2. Далее необходимо перейти в Airflow  по адресу [http://localhost:8080]( http://localhost:8080/)
 
-Для загрузки Variables и Connections запускается DAG [01_conn_var]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/01_conn_var.py)
+3. Для загрузки Variables и Connections запускается DAG [01_conn_var]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/01_conn_var.py)
 
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_01_conn_var.png)
 
@@ -131,9 +131,9 @@ ER-диаграмма
 ![Image alt](https://github.com/MOMIV/MProject/blob/main/doc/pic/Dags.png)
 
 
-К БД подключаемся с помощью DBeaver, параметры подключения берем из [connections.json](https://github.com/MOMIV/MProject/blob/main/airflow/dags/connections.json)
+4. К БД подключаемся с помощью DBeaver, параметры подключения берем из [connections.json](https://github.com/MOMIV/MProject/blob/main/airflow/dags/connections.json)
 
-Далее запускается DAG [02_init](https://github.com/MOMIV/MProject/blob/main/airflow/dags/02_init.py) – инициализирующий
+5. Далее запускается DAG [02_init](https://github.com/MOMIV/MProject/blob/main/airflow/dags/02_init.py) – инициализирующий
 
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_02_init.png)
 
@@ -151,7 +151,7 @@ ER-диаграмма
 
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_01_mart.png)
 
-DAG 02_init запускается один раз, далее данные дополняются ежедневно в 01.00 при запуске DAG [03_incr]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/03_incr.py) – инкрементальный
+6. DAG 02_init запускается один раз, далее данные дополняются ежедневно в 01.00 при запуске DAG [03_incr]( https://github.com/MOMIV/MProject/blob/main/airflow/dags/03_incr.py) – инкрементальный
 
 
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/Graph_03_incr.png)
@@ -171,16 +171,13 @@ DAG 02_init запускается один раз, далее данные до
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_mart.png)
 
 
-
-
-
 Результаты разработки
 ===========
 
+![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_mart.png)
 
 
 Выводы
 ===========
 *Создан ETL-процесс формирования витрин данных для анализа изменений курса акций
 *В процессе выполнения работы закреплены на практике знания и навыки работы с изученными на курсе технологиями  используемыми в инженерии данных
-
