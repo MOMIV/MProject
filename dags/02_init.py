@@ -1,14 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from airflow import DAG
 from airflow.models import Variable
-from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.hooks.postgres_hook import PostgresHook
-import json
 import requests
 import pandas as pd
 
@@ -19,21 +15,19 @@ conn_id = Variable.get("conn_name")
 URL_API= Variable.get("URL_API")
 
 # Список акций
-stocks = ['AAPL', 'NVDA', 'TSLA']
+stocks = ['AAPL', 'NVDA', 'TSLA', 'BABA', 'META']
 
 #Создаем таблицы row слоя
-def create_tables():
+def create_row_tables():
         
     for stock in stocks:
-        # соединяемся с БД
         hook = PostgresHook(postgres_conn_id=conn_id)
         conn = hook.get_conn()
         cursor = conn.cursor()        
-        table_name= f'{stock}'
-        tbl_query= f"""
+        table_name= f'row_{stock}'
+        tbl_row_query= f"""
         DROP TABLE IF EXISTS {table_name};
         CREATE TABLE {table_name} (
-        id SERIAL PRIMARY KEY, 
         row_date timestamp, 
         row_open double precision, 
         row_high double precision,
@@ -43,16 +37,16 @@ def create_tables():
         """
 
         try:
-                cursor.execute(tbl_query)
+                cursor.execute(tbl_row_query)
                 conn.commit()
 
                 cursor.close()
                 conn.close()
-                print(f"Таблица {stock} сoздана")
+                print(f"Таблица row_{stock} сoздана")
 
         except Exception as error:
              conn.rollback()
-             raise Exception(f'Создать таблицу  {stock} не получилось: {error}!')
+             raise Exception(f'Создать таблицу  row_{stock} не получилось: {error}!')
 
 #Извлекаем данные из API
 def extract_load_data():
@@ -64,7 +58,7 @@ def extract_load_data():
             "outputsize":"full",
             "apikey": Variable.get("apikey")
             }
-        table_name= f'{stock}'
+        table_name= f'row_{stock}'
         hook = PostgresHook(postgres_conn_id=conn_id)
         conn = hook.get_conn()
         cursor = conn.cursor() 
@@ -86,21 +80,20 @@ def extract_load_data():
 
              cursor.close()
              conn.close()
-             print("Данные успешно загружены в таблицу!")
+             print("Данные успешно загружены в таблицу  row_{stock}!")
         except Exception as error:
              conn.rollback()
-             raise Exception(f'Загрузить данные не получилось: {error}!')
+             raise Exception(f'Загрузить данные в таблицу  row_{stock} не получилось: {error}!')
 
 #Создаем таблицы core слоя
 def create_populate_core_tables():
         
     for stock in stocks:
-        # соединяемся с БД
         hook = PostgresHook(postgres_conn_id=conn_id)
         conn = hook.get_conn()
         cursor = conn.cursor()        
         core_table_name= f'core_{stock}'
-        table_name= f'{stock}'
+        table_name= f'row_{stock}'
         company=Variable.get(f'{stock}')
         tbl_core_query= f"""
         DROP TABLE IF EXISTS {core_table_name};
@@ -185,10 +178,9 @@ def create_populate_core_tables():
              conn.rollback()
              raise Exception(f'Создать и заполнить таблицу  {stock} не получилось: {error}!')
         
-#Создаем витрину
+#Создаем витрину данных
 def create_populate_mart():
-
-     # соединяемся с БД
+            
         hook = PostgresHook(postgres_conn_id=conn_id)
         conn = hook.get_conn()
         cursor = conn.cursor()        
@@ -221,7 +213,6 @@ def create_populate_mart():
              raise Exception(f'Создать таблицу  mart не получилось: {error}!') 
         
         for stock in stocks:
-            # соединяемся с БД
             hook = PostgresHook(postgres_conn_id=conn_id)
             conn = hook.get_conn()
             cursor = conn.cursor() 
@@ -250,29 +241,28 @@ def create_populate_mart():
 
 # аргументы дага по умолчанию
 default_args = {
-    "owner": "inna",
+    "owner": "momiv",
     "retries": 1,
     "retry_delay": 1,
-    "start_date": datetime(2023, 11, 4),
+    "start_date": datetime.today(),
 }
 
-with DAG(dag_id="get_rate", 
+with DAG(dag_id="02_init", 
          default_args=default_args, 
          schedule_interval="@once", 
-         description= "Получениe курса акций", 
-         template_searchpath = "/tmp", 
+         description= "Получениe курса акций - инициализирующий", 
          catchup=False) as dag:
 
     start = EmptyOperator(task_id='start') 
     end = EmptyOperator(task_id='end')
 
-    create_stock_table = PythonOperator(
+    create_row_table = PythonOperator(
         task_id="create_row_stock_table",
-         python_callable=create_tables
+         python_callable=create_row_tables
     )
     
-    extract_load_data_row = PythonOperator(
-        task_id='load_data_row',
+    populate_row_table = PythonOperator(
+        task_id='extract_load_data',
         python_callable=extract_load_data
     )
 
@@ -286,5 +276,5 @@ with DAG(dag_id="get_rate",
         python_callable=create_populate_mart
     )
 
-    start >> create_stock_table >> extract_load_data_row >> populate_core_table >> create_mart >>end
+    start >> create_row_table >> populate_row_table >> populate_core_table >> create_mart >>end
 

@@ -4,5 +4,7 @@
     "conn_name": "conn_db",
     "AAPL": "APPLE",
     "NVDA": "NVIDIA",
-    "TSLA": "TESLA"
+    "TSLA": "TESLA",
+    "BABA": "ALIBABA ADR",
+    "META": "META PLATFORMS"
 }

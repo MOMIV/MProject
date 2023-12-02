@@ -1,17 +1,17 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.dummy_operator import DummyOperator
+
 
 # аргументы дага по умолчанию
 default_args = {
-    "owner": "inna",
+    "owner": "momiv",
     "retries": 0,
     "start_date": datetime.today()
 }
 
-with DAG(dag_id="01_init", 
+with DAG(dag_id="01_conn_var", 
          default_args=default_args, 
          description="init var, conn",
          schedule_interval='@once',
