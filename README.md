@@ -199,3 +199,9 @@ ER-диаграмма
 ![Image alt]( https://github.com/MOMIV/MProject/blob/main/doc/pic/DB_after_DAG_02_mart_2.png)
 
 2. В процессе выполнения работы закреплены на практике знания и навыки работы с изученными на курсе технологиями  используемыми в инженерии данных
+
+
+Презентация по проекту
+===========
+
+[Презентация](https://github.com/MOMIV/MProject/blob/main/doc/Presentation.pdf)
