@@ -248,12 +248,12 @@ with DAG(dag_id="03_incr",
     )
 
     add_delta_core_table = PythonOperator(
-        task_id='load_data_core',
+        task_id='delta_data_core',
         python_callable=delta_core_tables
     )
 
     update_mart = PythonOperator(
-        task_id='mart',
+        task_id='upd_data_mart',
         python_callable=upd_mart
     )
 
