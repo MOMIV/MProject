@@ -225,7 +225,7 @@ default_args = {
     "owner": "momiv",
     "retries": 1,
     "retry_delay": 1,
-    "start_date": datetime(2023, 12, 3),
+    "start_date": datetime(2023, 12, 2),
 }
 
 with DAG(dag_id="03_incr", 
